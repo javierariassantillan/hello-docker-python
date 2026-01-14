@@ -1,0 +1,12 @@
+# Python
+__pycache__/
+*.pyc
+
+# Node / Serverless
+serverless-hello/node_modules/
+serverless-hello/.serverless/
+serverless-hello/.webpack/
+
+# Cosas de sistema
+.vscode/
+.env
