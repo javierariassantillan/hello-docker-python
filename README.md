@@ -1,74 +1,114 @@
-# Hello Docker Python 🐍🐳
+# Hello Microservice — Docker vs Serverless
 
-Aplicación minimalista en **Python + Flask** ejecutándose dentro de un contenedor **Docker**.
-Sirve como ejemplo de cómo contenerizar una API sencilla y publicarla en Docker Hub.
+## Objetivo
 
----
+Implementar y comparar un endpoint simple utilizando dos arquitecturas distintas:
 
-## 🧱 Estructura del proyecto
+1. Microservicio contenedorizado con Docker
+2. Función Serverless usando Serverless Framework (Lambda HTTP)
 
-.
-├── app.py           # Aplicación Flask (lógica de la API)
-├── Dockerfile       # Instrucciones para construir la imagen Docker
-├── requirements.txt # Dependencias de Python
-└── README.md        # Documentación del proyecto
+El objetivo es observar diferencias en despliegue, ejecución y complejidad.
 
 ---
 
-## ✅ Requisitos
+## Endpoint implementado
 
-- Docker instalado en el equipo.
-- (Opcional) Git instalado para clonar o contribuir.
+Ambas versiones exponen el mismo endpoint:
+
+GET /hello?name=Ana
+
+Respuesta:
+
+{ "message": "Hola Ana" }
 
 ---
 
-## 🔨 Construcción de la imagen Docker (local)
+## Parte 1 — Microservicio con Docker
+
+### Estructura del proyecto
+
+app.py  
+Dockerfile  
+requirements.txt  
+README.md  
+
+### Ejecución local
+
+Construir la imagen:
 
 docker build -t hello-docker-python .
 
----
-
-## ▶️ Ejecución del contenedor
-
-### Usando la imagen local
+Ejecutar el contenedor:
 
 docker run -p 5000:5000 hello-docker-python
 
-### Usando la imagen desde Docker Hub
-
-docker pull 17javi/hello-docker-python:latest
-docker run -p 5000:5000 17javi/hello-docker-python:latest
-
----
-
-## 🌐 Probar la aplicación
-
-Abrir en el navegador:
+Probar en navegador:
 
 http://localhost:5000/hello?name=Ana
 
-Respuesta esperada:
+### Imagen en Docker Hub
 
-{"message": "Hola Ana desde Docker!"}
+Se puede obtener vía:
 
----
-
-## 🐳 Imagen en Docker Hub
-
-Repositorio público:
-
-17javi/hello-docker-python:latest
+docker pull 17javi/hello-docker-python
 
 ---
 
-## 🧠 Notas técnicas
+## Parte 2 — Función Serverless (Lambda / HTTP API)
 
-- Framework: Flask
-- Puerto expuesto: 5000
-- Endpoint: /hello?name=<nombre>
+### Estructura del proyecto
+
+serverless-hello/  
+ ├ handler.js  
+ ├ serverless.yml  
+ ├ package.json  
+ └ package-lock.json  
+
+### Ejecución local
+
+cd serverless-hello  
+npm install  
+npm run offline
+
+Probar en navegador:
+
+http://localhost:3000/hello?name=Ana
 
 ---
 
-## 👤 Autor
+## Comparación entre arquitecturas
 
-Proyecto desarrollado por **Javier Arias** como demostración de despliegue de aplicaciones Python con Docker.
+| Aspecto | Docker | Serverless |
+|---|---|---|
+| Paradigma | Contenedores | Funciones |
+| Infraestructura | App + runtime | Función + runtime |
+| Escalado | Manual / Orquestador | Automático |
+| Costos | Paga por servidor | Paga por ejecución |
+| Cold start | No | Sí (a veces) |
+| Latencia | Estable | Puede variar |
+| Ideal para | Servicios persistentes | Eventos/http |
+
+---
+
+## Conclusiones
+
+- Docker ofrece control total del entorno y es ideal para servicios persistentes y stateful.
+- Serverless elimina la gestión de infraestructura y escala automáticamente bajo demanda.
+- Para workloads HTTP cortos y orientados a eventos, Serverless puede ser más eficiente en costos.
+- Para procesos largos o servicios de sesión, Docker resulta más apropiado.
+
+---
+
+## Referencias del proyecto
+
+Repositorio GitHub:  
+https://github.com/javierariassantillan/hello-docker-python
+
+Imagen en Docker Hub:  
+17javi/hello-docker-python
+
+---
+
+## Notas finales
+
+Proyecto académico para demostrar diferencias entre modelos de despliegue modernos y sus compromisos técnicos.
